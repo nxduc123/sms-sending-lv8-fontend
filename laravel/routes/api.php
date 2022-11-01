@@ -2,7 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\ApiUpdateStatus;
+use App\Http\Middleware\APIFPTKey;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -17,4 +18,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::any('/dlr', ['uses' => 'ApiUpdateStatus@receiveMo', 'as' => 'dlr'])->middleware('APIFPTKey');
+//Route::any('/dlr', ['uses' => 'ApiUpdateStatus@receiveMo', 'as' => 'dlr'])->middleware('APIFPTKey');
+
+Route::middleware(['APIFPTKey'])->group(function () {
+    Route::any('/dlr1', [ApiUpdateStatus::class, 'receiveMo']);
+});
