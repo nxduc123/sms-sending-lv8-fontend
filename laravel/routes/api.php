@@ -21,5 +21,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //Route::any('/dlr', ['uses' => 'ApiUpdateStatus@receiveMo', 'as' => 'dlr'])->middleware('APIFPTKey');
 
 Route::middleware(['APIFPTKey'])->group(function () {
-    Route::any('/dlr1', [ApiUpdateStatus::class, 'receiveMo']);
+    Route::any('/dlr', [ApiUpdateStatus::class, 'receiveMo']);
 });
