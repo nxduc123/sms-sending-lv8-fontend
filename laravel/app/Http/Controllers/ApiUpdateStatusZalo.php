@@ -3,30 +3,33 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\CheckRequestAPI;
+use App\Http\Requests\CheckRequestAPIZalo;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
-
-class ApiUpdateStatus extends Controller
+class ApiUpdateStatusZalo extends Controller
 {
-    public function receiveMo(CheckRequestAPI $request)
+    public function receiveZALO(CheckRequestAPIZalo $request)
     {
         $data = $request->all();
         \Log::info(json_encode($data));
         try {
             $connection = new AMQPStreamConnection(env('RABBITMQ_HOST'), env('RABBITMQ_PORT'), env('RABBITMQ_LOGIN'), env('RABBITMQ_PASSWORD'), env('RABBITMQ_VHOST'));
             $channel = $connection->channel();
-            $channel->queue_declare(env('QUEUE_DLR'), false, true, false, false);
+            $channel->queue_declare(env('QUEUE_ZALO'), false, true, false, false);
             $data = json_encode([
-                'TmpID' => $data['smsid'],
-                'Status' => $data['status'],
-                'Telco' => $data['telco'] ?? 'FPT',
-                'ErrorCode' => $data['error'] ?? '',
-                'MsgCount' => $data['mt_count'],
-                'Mt_count' => $data['test_them'],
+                'msg_id' => $data['msg_id'],
+                'status' => $data['status'],
+                'zns_msg_id' => $data['zns_msg_id'] ?? '',
+                'vbr_msg_id' => $data['vbr_msg_id'] ?? '',
+                'received_time' => $data['received_time'] ?? '',
+                'error' => $data['error'] ?? '',
+                'sms_msg_id' => $data['sms_msg_id'],
+                'error_failover' => $data['error_failover'],
+                'failover_sent_time' => $data['failover_sent_time'],
+                'failover_received_time' => $data['failover_received_time'],
             ]);
             $msg = new AMQPMessage($data, ['delivery_mode' => 2]);
-            $channel->basic_publish($msg, '', env('QUEUE_DLR'));
+            $channel->basic_publish($msg, '', env('QUEUE_ZALO'));
 
             return response()->json(
                 [

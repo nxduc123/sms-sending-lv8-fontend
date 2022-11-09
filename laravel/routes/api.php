@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiUpdateStatus;
 use App\Http\Middleware\APIFPTKey;
+use App\Http\Controllers\ApiUpdateStatusZalo;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -22,4 +23,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::middleware(['APIFPTKey'])->group(function () {
     Route::any('/dlr', [ApiUpdateStatus::class, 'receiveMo']);
+});
+Route::middleware(['APIFPTKey'])->group(function () {
+    Route::any('/zalodlr', [ApiUpdateStatusZalo::class, 'receiveZALO']);
 });
