@@ -18,6 +18,7 @@ class ApiUpdateStatusZalo extends Controller
             $channel->queue_declare(env('QUEUE_ZALO'), false, true, false, false);
             $data = json_encode([
                 'msg_id' => $data['msg_id'],
+                'type' => $data['type'],
                 'status' => $data['status'],
                 'zns_msg_id' => $data['zns_msg_id'] ?? '',
                 'vbr_msg_id' => $data['vbr_msg_id'] ?? '',
